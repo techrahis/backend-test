@@ -1,129 +1,84 @@
-# 🚀 Backend Test
+# Backend Test Project
 
-This is a production-ready Node.js backend built using Express, PostgreSQL (via Sequelize), and features like JWT auth, Cloudinary image uploads, email OTP via Resend, Redis, and more.
+This is a backend project that includes various features like Spotify API integration, Redis caching, and PostgreSQL for storing data. It is built using **Node.js**, **Express.js**, **Sequelize ORM**, **Jest testing**, and other tools.
 
-## Tech Stack
+## Key Features:
 
-- Node.js & Express.js
-- PostgreSQL with Sequelize ORM
-- Redis for OTP storage
-- Cloudinary for image upload
-- Resend with Nodemailer for email OTP
-- Multer for image handling
-- JWT Auth (Access + Refresh Token)
-- Express Rate Limit for route-wise throttling
-- Jest + Supertest for testing
+- **Spotify API Integration**: Allows users to get their top tracks, see the currently playing song, and control playback (play, pause).
+- **Redis Caching**: Caches frequently accessed data for better performance.
+- **PostgreSQL Database**: Used for persistent storage of data.
+- **Cloudinary**: For media uploads (e.g., images).
+- **Rate Limiting**: Uses Express-rate-limit for controlling request rates.
+- **Email Sending**: Uses **Resend** for email functionality (via NodeMailer).
 
-## Folder Structure
+## Technologies Used:
 
-\`\`\`
-src/
-config/ # Cloudinary, Redis, DB configs
-controllers/ # Route logic
-routes/ # Express routes
-services/ # Business logic
-utils/ # Helper functions (e.g. upload, OTP)
-middlewares/ # Auth, error handling, etc.
-models/ # Sequelize models
-app.js # Main app file
-server.js # Server entry point
-tests/ # Test files
-\`\`\`
+- **Node.js**: JavaScript runtime
+- **Express.js**: Web framework for Node.js
+- **Sequelize ORM**: ORM for PostgreSQL
+- **Redis**: For caching frequently accessed data
+- **Cloudinary**: For uploading and storing media (e.g., images)
+- **Jest**: Testing framework for unit and integration tests
+- **Multer**: Middleware for handling file uploads
+- **Upstash**: Redis as a service
+- **PostgreSQL**: Relational database
+- **Resend**: Email service integration for sending emails
+- **Cloudflare**: For distributing the app on a custom subdomain
 
-## Features
+## Endpoints:
 
-- ✅ Authentication (Register, Login, Refresh Token)
-- ✅ Email OTP-based Password Reset
-- ✅ Profile Picture Upload to Cloudinary
-- ✅ Rate Limiting per Route
-- ✅ Environment Config Management
-- ✅ Tested Login Route using Jest + Supertest
+### 1. **Spotify Integration**
 
-## Testing
+- `GET /api/v1/spotify/top-tracks`: Get the user's top 10 tracks from Spotify.
+- `GET /api/v1/spotify/now-playing`: Get the currently playing song on Spotify.
+- `POST /api/v1/spotify/play-song`: Start playing a song (from the top 10).
+- `PUT /api/v1/spotify/pause-song`: Pause the currently playing song.
 
-To test the app:
+### 2. **Authentication Endpoints**:
 
-**Run all tests:**
-\`\`\`
-yarn test
-\`\`\`
+- `POST /api/v1/auth/register`: Register a new user.
+- `POST /api/v1/auth/login`: Login a user.
+- `POST /api/v1/auth/logout`: Logout a user (requires authentication).
+- `POST /api/v1/auth/refresh`: Refresh the authentication token.
+- `GET /api/v1/auth/me`: Get the current user's details (requires authentication).
+- `PUT /api/v1/auth/update`: Update the user's details (requires authentication).
+- `PUT /api/v1/auth/update-profile-picture`: Update the user's profile picture (requires authentication).
+- `DELETE /api/v1/auth/remove-profile-picture`: Remove the user's profile picture (requires authentication).
+- `POST /api/v1/auth/initiate-reset-password`: Initiate the password reset process by sending an OTP.
+- `POST /api/v1/auth/reset-password`: Reset the user's password with OTP verification.
 
-**Run tests with watch mode (re-runs tests on file changes):**
-\`\`\`
-yarn test --watch
-\`\`\`
+## Rate Limiting:
 
-**Detect open async operations after tests:**
-\`\`\`
-yarn test --detectOpenHandles
-\`\`\`
+- **General Limiting**: Applied to most routes to prevent abuse.
+- **Spotify Rate Limiting**: Applied to Spotify-related routes to control the frequency of requests to the Spotify API.
+- **Auth Rate Limiting**: Specific rate limiters are applied to authentication-related routes, such as login, registration, OTP requests, etc.
 
-## Environment Setup
+## Project Setup and Deployment:
 
-Create a `.env` file at the root with the following:
+1. **Local Setup**:
 
-\`\`\`
-NODE_ENV=development
-PORT=5678
-DB_NAME=your_db_name
-DB_USER=your_db_user
-DB_PASSWORD=your_db_password
-DB_HOST=your_db_host
-DB_PORT=5432
+   - Clone the repository.
+   - Run `yarn` to install dependencies.
+   - Create a `.env` file and configure the necessary environment variables (e.g., Spotify credentials, PostgreSQL URL, Redis URL).
+   - Start the development server using `yarn dev`.
 
-ACCESS_TOKEN_SECRET=your_access_secret
-REFRESH_TOKEN_SECRET=your_refresh_secret
-ACCESS_TOKEN_EXPIRY=15m
-REFRESH_TOKEN_EXPIRY=7d
+2. **Deployment**:
+   - Deployed on **Vercel** for serverless deployment.
+   - The app uses **Cloudflare** for distribution on a custom subdomain.
 
-RESEND_API_KEY=your_resend_api_key
+## Testing:
 
-REDIS_HOST=your_redis_host
-REDIS_PORT=6379
-REDIS_PASSWORD=your_redis_password
-REDIS_TLS_SSL=true
+- **Jest** is used for testing.
+- Use `yarn test` to run tests.
 
-CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_key
-CLOUDINARY_API_SECRET=your_cloudinary_secret
-\`\`\`
+## Postman Collection:
 
-## Local Development
+To test the API, you can import the Postman collection from the following link:
 
-To run the app locally:
+[Postman Collection](https://www.postman.com/payload-geoscientist-74286553/my-workspace/collection/notc52q/backend-test?action=share&creator=34868713)
 
-1. Install dependencies:
-   \`\`\`
-   yarn install
-   \`\`\`
+This collection includes all the available API routes and their expected responses.
 
-2. Start the development server:
-   \`\`\`
-   yarn dev
-   \`\`\`
+## License:
 
-## Deployment (Vercel)
-
-### Steps:
-
-1. Ensure your `vercel.json` is configured correctly:
-
-\`\`\`
-{
-"version": 2,
-"builds": [
-{ "src": "api/**/*.js", "use": "@vercel/node" }
-],
-"routes": [
-{ "src": "/api/(.*)", "dest": "/api/index.js" }
-]
-}
-\`\`\`
-
-2. Place your Express server in `/api/index.js` or adjust the `dest` path in `vercel.json`.
-
-3. Add environment variables in Vercel Dashboard > Project > Settings > Environment Variables.
-
----
-
-Built with ❤️ by Rajarshi Samaddar
+MIT License. See `LICENSE` for more information.

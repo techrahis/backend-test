@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "type": "module",
+  "author": "rajarshi samaddar",
   "scripts": {
     "start": "node ./src/server.js",
     "dev": "nodemon ./src/server.js",
