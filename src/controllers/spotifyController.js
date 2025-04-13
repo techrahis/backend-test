@@ -16,7 +16,6 @@ const getTopTracks = asyncHandler(async (req, res) => {
       topTracks,
     });
   } catch (error) {
-    console.error("Error fetching top tracks:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch top tracks from Spotify",
@@ -47,7 +46,6 @@ const getNowPlaying = asyncHandler(async (req, res) => {
       nowPlaying,
     });
   } catch (error) {
-    console.error("Error fetching currently playing song:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch currently playing song from Spotify",

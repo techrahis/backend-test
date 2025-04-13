@@ -45,7 +45,7 @@ const register = async (
     spotifyRefreshToken,
     spotifyClientSecret,
     spotifyClientId,
-    spotifyAccessTokenExpiresAt: new Date(Date.now() + 2400 * 1000), // 40 minutes
+    spotifyAccessTokenExpiresAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
   });
 
   // ✅ Convert Sequelize instance to plain object
@@ -124,10 +124,7 @@ const logout = async (refreshToken) => {
   // ✅ Check if user exists with decoded token user data (email or phone) and refreshToken
   const user = await User.findOne({
     where: {
-      [Op.or]: [
-        { email: decodedToken.user.email },
-        { phone: decodedToken.user.phone },
-      ],
+      [Op.or]: [{ email: decodedToken.email }, { phone: decodedToken.phone }],
       refreshToken,
     },
   });

@@ -1,19 +1,26 @@
 import axios from "axios";
+import qs from "qs";
 
 const SPOTIFY_API_URL = "https://accounts.spotify.com/api/token";
 
-// Refresh Spotify Access Token using the refresh token
 const refreshSpotifyAccessToken = async (user) => {
   try {
-    const response = await axios.post(SPOTIFY_API_URL, null, {
-      params: {
-        grant_type: "refresh_token",
-        refresh_token: user.spotifyRefreshToken,
-        client_id: user.spotifyClientId,
-        client_secret: user.spotifyClientSecret,
-      },
+    // Encode client credentials
+    const credentials = Buffer.from(
+      `${user.spotifyClientId}:${user.spotifyClientSecret}`
+    ).toString("base64");
+
+    // Prepare request body
+    const data = qs.stringify({
+      grant_type: "refresh_token",
+      refresh_token: user.spotifyRefreshToken,
+    });
+
+    // Send POST request to Spotify API
+    const response = await axios.post(SPOTIFY_API_URL, data, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${credentials}`,
       },
     });
 
