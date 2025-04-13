@@ -79,6 +79,48 @@ To test the API, you can import the Postman collection from the following link:
 
 This collection includes all the available API routes and their expected responses.
 
+## 🔐 Spotify Developer Setup (Required for Multi-User Support)
+
+To enable users to connect their Spotify accounts, you need to create your own Spotify Developer App and create new user with those tokens.
+
+### 🎯 Goal
+
+Each user will authenticate with their own Spotify account. The server will store individual `spotify_access_token` and `spotify_refresh_token` values securely in your database for use with Spotify APIs.
+
+---
+
+### 🧾 Steps to Get Spotify Credentials:
+
+1. **Create a Spotify Developer App**
+
+   - Visit: [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+   - Click on **“Create an App”**
+   - Note down the `Client ID` and `Client Secret`.
+
+2. **Add a Redirect URI**
+
+   In your app settings, add the following Redirect URI: http://localhost:5678/callback
+
+This URI must match what your backend uses during the OAuth process.
+
+3. **Generate Spotify Access Token and Refresh Token using the utility function `getSpotifyTokens.js`**
+
+- Use the `getSpotifyTokens.js` utility function to generate the access token and refresh token for your Spotify account.
+- This function will open a browser window for you to log in to your Spotify account and authorize the app.
+
+4. **Create a New User with These 4 Keys**
+
+After generating the tokens, create a new user with the following data:
+
+- `spotify_access_token`: The access token you received from the utility function.
+- `spotify_refresh_token`: The refresh token you received from the utility function.
+- `spotify_client_id`: Your Spotify app's Client ID.
+- `spotify_client_secret`: Your Spotify app's Client Secret.
+
+5. **Check the Postman Collection to Use All the REST API Routes**
+
+- Use the Postman collection provided above to test the API endpoints.
+
 ## License:
 
 MIT License. See `LICENSE` for more information.
